@@ -7,6 +7,8 @@ class UserProfile {
   final String? phone;
   final String? profilePicUrl;
   final DateTime? createdAt;
+  String? themePreference; // Added theme preference
+  String? currencyPreference; // Added currency preference
 
   UserProfile({
     required this.uid,
@@ -15,6 +17,8 @@ class UserProfile {
     this.phone,
     this.profilePicUrl,
     this.createdAt,
+    this.themePreference = 'system', // Default to system
+    this.currencyPreference = 'INR',
   });
 
   factory UserProfile.fromFirestore(DocumentSnapshot doc) {
@@ -26,6 +30,8 @@ class UserProfile {
       phone: data['phone'] as String?,
       profilePicUrl: data['profilePicUrl'] as String?,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
+      themePreference: data['themePreference'] as String? ?? 'system',
+      currencyPreference: data['currencyPreference'] as String? ?? 'USD',
     );
   }
 
@@ -37,6 +43,8 @@ class UserProfile {
        phone: data['phone'] as String?,
        profilePicUrl: data['profilePicUrl'] as String?,
        createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
+       themePreference: data['themePreference'] as String? ?? 'system',
+       currencyPreference: data['currencyPreference'] as String? ?? 'USD',
      );
    }
 
@@ -48,6 +56,8 @@ class UserProfile {
       'phone': phone,
       'profilePicUrl': profilePicUrl,
       'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+      'themePreference': themePreference,
+      'currencyPreference': currencyPreference,
     };
   }
 }

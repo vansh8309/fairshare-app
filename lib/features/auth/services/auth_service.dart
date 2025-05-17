@@ -151,6 +151,65 @@ class AuthService {
      }
   }
 
+  Future<void> changePassword(String currentPassword, String newPassword) async {
+    User? user = _firebaseAuth.currentUser;
+
+    if (user == null) {
+      throw FirebaseAuthException(
+        code: 'user-not-found',
+        message: 'No user is currently signed in.',
+      );
+    }
+
+    // Check if the user signed in with email and password
+    // This check might need to be more robust depending on how you track providerId
+    bool isEmailProvider = false;
+    for (UserInfo userInfo in user.providerData) {
+      if (userInfo.providerId == 'password') { // 'password' is the providerId for email/password
+        isEmailProvider = true;
+        break;
+      }
+    }
+
+    if (!isEmailProvider) {
+      throw FirebaseAuthException(
+        code: 'operation-not-allowed',
+        message: 'Password change is only available for accounts created with email and password.',
+      );
+    }
+
+    if (user.email == null) {
+      // This should ideally not happen if providerId is 'password'
+       throw FirebaseAuthException(
+        code: 'email-not-found',
+        message: 'User email not found, cannot re-authenticate.',
+      );
+    }
+
+    try {
+      // Re-authenticate the user
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: currentPassword,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+
+      // If re-authentication is successful, update the password
+      await user.updatePassword(newPassword);
+      print("Password updated successfully.");
+
+    } on FirebaseAuthException catch (e) {
+      print("FirebaseAuthException during password change: ${e.code} - ${e.message}");
+      // Re-throw the exception so the UI can catch specific error codes
+      // like 'wrong-password', 'weak-password', 'requires-recent-login'
+      throw e;
+    } catch (e) {
+      print("Generic error during password change: $e");
+      throw Exception("An unexpected error occurred while changing password.");
+    }
+  }
+
   // Sign Out
   Future<void> signOut() async {
      try {

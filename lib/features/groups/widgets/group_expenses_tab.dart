@@ -101,10 +101,13 @@ class GroupExpensesTab extends StatelessWidget {
 
         Padding(
            padding: const EdgeInsets.fromLTRB(AppDimens.kLargePadding, AppDimens.kSmallPadding, AppDimens.kLargePadding, AppDimens.kDefaultPadding),
-           child: ElevatedButton.icon(
-             icon: const Icon(Icons.add), label: const Text("Add New Expense"),
-             style: ElevatedButton.styleFrom( backgroundColor: AppColors.secondary, foregroundColor: buttonFgColor, padding: AppDimens.kContinueButtonPadding,),
-             onPressed: () { Navigator.push( context, MaterialPageRoute( builder: (context) => AddExpenseScreen( groupId: group.id, groupCurrencyCode: group.currencyCode,) ),); },
+           child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              icon: const Icon(Icons.add), label: const Text("Add New Expense"),
+              style: ElevatedButton.styleFrom( backgroundColor: AppColors.secondary, foregroundColor: buttonFgColor, padding: AppDimens.kContinueButtonPadding,),
+              onPressed: () { Navigator.push( context, MaterialPageRoute( builder: (context) => AddExpenseScreen( groupId: group.id, groupCurrencyCode: group.currencyCode,) ),); },
+            ),
            ),
          ),
       ],
@@ -169,22 +172,25 @@ class GroupExpensesTab extends StatelessWidget {
 
                         const SizedBox(height: AppDimens.kSpacingMedium),
                          Center(
-                           child: ElevatedButton.icon(
-                              icon: const Icon(Icons.compare_arrows_outlined),
-                              label: const Text("Settle Up"),
-                              style: ElevatedButton.styleFrom(
-                                 backgroundColor: AppColors.primary,
-                                 foregroundColor: AppColors.getButtonForegroundColor(AppColors.primary),
-                              ),
-                              onPressed: () {
-                                 print("Settle Up tapped. Debts: $debts");
-                                 Navigator.push(context, MaterialPageRoute(builder: (_) => SettleUpScreen(
-                                      groupId: group.id,
-                                      groupCurrencyCode: group.currencyCode,
-                                      simplifiedDebts: debts,
-                                    )));
-                              },
-                           ),
+                          child: SizedBox( 
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                                icon: const Icon(Icons.compare_arrows_outlined),
+                                label: const Text("Settle Up"),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  foregroundColor: AppColors.getButtonForegroundColor(AppColors.primary),
+                                ),
+                                onPressed: () {
+                                  print("Settle Up tapped. Debts: $debts");
+                                  Navigator.push(context, MaterialPageRoute(builder: (_) => SettleUpScreen(
+                                        groupId: group.id,
+                                        groupCurrencyCode: group.currencyCode,
+                                        simplifiedDebts: debts,
+                                      )));
+                                },
+                            ),
+                          ),
                          ),
                      ],
                   );

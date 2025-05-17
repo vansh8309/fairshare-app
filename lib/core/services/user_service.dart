@@ -105,4 +105,13 @@ class UserService {
     }
   }
 
+  Future<void> updateThemePreference(String uid, String theme) async {
+    await _firestore.collection('users').doc(uid).update({'themePreference': theme});
+  }
+
+    // Add this method to UserService
+  Future<void> deleteUserProfile(String uid) async {
+    await _firestore.collection('users').doc(uid).delete();
+  }
+
 }
